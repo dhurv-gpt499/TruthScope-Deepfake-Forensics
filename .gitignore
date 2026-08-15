@@ -1,0 +1,25 @@
+# Environments
+.env
+.venv_gpu
+.venv_main
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Models and downloaded weight
+models
+*.pt
+*.pth
+*.onnx
+
+# Logs
+logs/
+*.log
+
+# Testing artifacts
+tests_files/
+aegis_x.egg-info/
+
+# User uploads and temporary files
+downloads/

@@ -1,0 +1,363 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const uploadZone = document.getElementById("upload-zone");
+    const fileInput = document.getElementById("file-input");
+    const uploadContent = document.querySelector(".upload-content");
+    const previewContainer = document.getElementById("preview-container");
+    const imagePreview = document.getElementById("image-preview");
+    const videoPreview = document.getElementById("video-preview");
+    const resultImagePreview = document.getElementById("result-image-preview");
+    const resultVideoPreview = document.getElementById("result-video-preview");
+    const analyzeBtn = document.getElementById("analyze-btn");
+    const removeBtn = document.getElementById("remove-btn");
+
+    const loader = document.getElementById("loader");
+    const resultsZone = document.getElementById("results-zone");
+    const restartBtn = document.getElementById("restart-btn");
+
+    let currentFile = null;
+
+    // Trigger file select dialog
+    uploadZone.addEventListener('click', (e) => {
+        // Prevent click if we click analyze/remove buttons or if image is loaded
+        if (e.target.tagName !== "BUTTON" && !currentFile) {
+            fileInput.click();
+        }
+    });
+
+    // Drag-and-drop Events
+    uploadZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if(!currentFile) uploadZone.classList.add("dragover");
+    });
+
+    uploadZone.addEventListener('dragleave', () => {
+        uploadZone.classList.remove("dragover");
+    });
+
+    uploadZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove("dragover");
+        if (!currentFile && e.dataTransfer.files.length) {
+            handleFile(e.dataTransfer.files[0]);
+        }
+    });
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length) {
+            handleFile(fileInput.files[0]);
+        }
+    });
+
+    function handleFile(file) {
+        currentFile = file;
+        const fileURL = URL.createObjectURL(file);
+        
+        if (file.type.startsWith("video/")) {
+            imagePreview.style.display = "none";
+            videoPreview.src = fileURL;
+            videoPreview.style.display = "block";
+            
+            if (resultImagePreview) resultImagePreview.style.display = "none";
+            if (resultVideoPreview) {
+                resultVideoPreview.src = fileURL;
+                resultVideoPreview.style.display = "block";
+            }
+        } else {
+            videoPreview.style.display = "none";
+            imagePreview.src = fileURL;
+            imagePreview.style.display = "block";
+            
+            if (resultVideoPreview) resultVideoPreview.style.display = "none";
+            if (resultImagePreview) {
+                resultImagePreview.src = fileURL;
+                resultImagePreview.style.display = "block";
+            }
+        }
+
+        uploadContent.style.display = "none";
+        previewContainer.style.display = "flex";
+        uploadZone.style.borderStyle = "solid";
+        uploadZone.style.padding = "2rem";
+    }
+
+    removeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        resetUI();
+    });
+
+    analyzeBtn.addEventListener('click', async (e) => {
+        e.stopPropagation(); 
+        if (!currentFile) return;
+
+        // Transition to loader
+        uploadZone.classList.add("hidden");
+        loader.classList.remove("hidden");
+
+        // Cycle text to indicate work is happening
+        const steps = document.querySelectorAll('.step');
+        let currentStep = 0;
+        const interval = setInterval(() => {
+            if(currentStep < steps.length - 1) {
+                steps[currentStep].classList.remove('active');
+                currentStep++;
+                steps[currentStep].classList.add('active');
+            }
+        }, 1500);
+
+        try {
+            const formData = new FormData();
+            formData.append('file', currentFile);
+            
+            const response = await fetch('/api/analyze', {
+                method: 'POST',
+                body: formData
+            });
+
+            clearInterval(interval);
+            
+            if (!response.ok) {
+                const errData = await response.json();
+                throw new Error(errData.error || "Server format error");
+            }
+            
+            // Read SSE stream
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let buffer = '';
+            
+            // Set up UI for streaming
+            loader.classList.add("hidden");
+            resultsZone.classList.remove("hidden");
+            
+            // Clear explanation text from any previous run
+            const explanationBox = document.getElementById("explanation-box");
+            const explanationText = document.getElementById("explanation-text");
+            explanationBox.style.display = "none";
+            explanationText.textContent = "";
+            
+            const subjectGrids = {};
+            const toolsGrid = document.getElementById("tools-grid");
+            toolsGrid.innerHTML = '';
+            
+            const renderToolName = (name) => {
+                return name.replace('run_', '').replace('check_', '').replace(/_/g, ' ');
+            };
+            
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split('\n\n');
+                
+                for (let i = 0; i < lines.length - 1; i++) {
+                    const line = lines[i].trim();
+                    if (!line.startsWith('data: ')) continue;
+                    
+                    const payload = JSON.parse(line.substring(6));
+                    
+                    if (payload.event_type === 'init') {
+                        document.getElementById("faces-detected").textContent = payload.faces_detected;
+                    } 
+                    else if (payload.event_type === 'tool_complete') {
+                        const res = payload.data;
+                        const toolName = renderToolName(payload.tool_name);
+                        const subjId = res.subject_id;
+                        
+                        let targetGrid = toolsGrid;
+                        
+                        if (subjId) {
+                            if (!subjectGrids[subjId]) {
+                                // Create a new subject section
+                                const section = document.createElement('div');
+                                section.className = "subject-section";
+                                section.innerHTML = `
+                                    <div class="subject-header">
+                                        <div class="subject-badge">Forensic Subject</div>
+                                        <h3>${subjId.toUpperCase()}</h3>
+                                    </div>
+                                    <div class="subject-grid"></div>
+                                `;
+                                toolsGrid.appendChild(section);
+                                subjectGrids[subjId] = section.querySelector('.subject-grid');
+                            }
+                            targetGrid = subjectGrids[subjId];
+                        }
+                        
+                        let statusClass = "status-error";
+                        let statusText = "ERROR";
+
+                        if (res.success) {
+                            if (res.confidence === 0) {
+                                statusClass = "status-warning";
+                                statusText = "ABSTAINED";
+                            } else {
+                                const realProb = 1.0 - res.score;
+                                const isRisk = realProb < 0.45;
+                                statusClass = isRisk ? "status-invalid" : "status-valid";
+                                statusText = isRisk ? "SUSPICIOUS" : "CLEAR";
+                            }
+                        }
+
+                        const card = document.createElement('div');
+                        card.className = "tool-card";
+                        
+                        let cardInner = `
+                            <div class="tool-header">
+                                <div class="tool-name">${toolName.toUpperCase()}</div>
+                                <div class="tool-status ${statusClass}">${statusText}</div>
+                            </div>`;
+                        
+                        if (res.success) {
+                            const realProb = 1.0 - res.score;
+                            if (res.confidence > 0) {
+                                cardInner += `
+                                <div class="tool-metrics">
+                                    <div class="metric">
+                                        <span class="metric-label">Authenticity</span>
+                                        <span class="metric-value" style="color: ${realProb < 0.5 ? 'var(--alert)' : 'var(--success)'}">${(realProb * 100).toFixed(0)}%</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="metric-label">Confidence</span>
+                                        <span class="metric-value">${(res.confidence || 0).toFixed(2)}</span>
+                                    </div>
+                                </div>`;
+                            } else {
+                                cardInner += `
+                                <div class="tool-metrics">
+                                    <div class="metric">
+                                        <span class="metric-label">Abstained</span>
+                                        <span class="metric-value" style="color: #888">N/A</span>
+                                    </div>
+                                </div>`;
+                            }
+                        }
+
+                        cardInner += `
+                            <div class="tool-evidence" style="margin-top: 10px;">
+                                ${res.success ? res.evidence_summary : (res.error_msg || "Tool execution failed.")}
+                            </div>
+                        `;
+                        
+                        card.innerHTML = cardInner;
+                        targetGrid.appendChild(card);
+                    }
+                    else if (payload.event_type === 'llm_stream') {
+                        // Stream explanation token-by-token (ChatGPT-style)
+                        const streamBox = document.getElementById("explanation-box");
+                        const streamText = document.getElementById("explanation-text");
+                        if (streamBox.style.display !== "block") {
+                            streamBox.style.display = "block";
+                        }
+                        streamText.textContent += payload.data.token;
+                        // Auto-scroll explanation into view
+                        streamText.scrollTop = streamText.scrollHeight;
+                    }
+                    else if (payload.event_type === 'verdict') {
+                        const finalDoc = payload.data;
+                        const finalVerdictBanner = document.getElementById("final-verdict-banner");
+                        const finalVerdictText = document.getElementById("final-verdict");
+                        const finalScoreText = document.getElementById("final-score");
+                        // Note: explanationText already fully populated by llm_stream events above
+                        // Only update score and banner here
+                        const scorePercent = ((finalDoc.score || 0) * 100).toFixed(1);
+                        finalScoreText.textContent = `${scorePercent}%`;
+                        
+                        // If somehow llm_stream wasn't used (C2PA short-circuit path), show explanation now
+                        const expBox = document.getElementById("explanation-box");
+                        const expText = document.getElementById("explanation-text");
+                        if (finalDoc.explanation && expText.textContent.trim() === "") {
+                            expBox.style.display = "block";
+                            expText.textContent = finalDoc.explanation;
+                        }
+                        
+                        finalVerdictBanner.classList.remove("fake", "real");
+                        if (finalDoc.verdict === "FAKE") {
+                            finalVerdictText.textContent = "⚠️ FAKE MEDIA DETECTED";
+                            finalVerdictBanner.classList.add("fake");
+                        } else {
+                            finalVerdictText.textContent = "✅ AUTHENTIC MEDIA";
+                            finalVerdictBanner.classList.add("real");
+                        }
+                    }
+                    else if (payload.event_type === 'early_stop') {
+                        // Display early stop banner
+                        const card = document.createElement('div');
+                        card.className = "tool-card";
+                        card.style.borderColor = "var(--primary-color)";
+                        card.innerHTML = `
+                            <div class="tool-header">
+                                <div class="tool-name">PIPELINE EARLY STOP</div>
+                                <div class="tool-status status-valid">HALTED</div>
+                            </div>
+                            <div class="tool-evidence" style="margin-top: 10px;">
+                                Reason: ${payload.data.reason}. Confidence Lock-in: ${(payload.data.confidence).toFixed(2)}
+                            </div>
+                        `;
+                        toolsGrid.appendChild(card);
+                    }
+                }
+                buffer = lines[lines.length - 1]; // keep remaining buffer
+            }
+
+        } catch (error) {
+            clearInterval(interval);
+            alert("Error: " + error.message);
+            resetUI();
+        }
+    });
+
+    function resetUI() {
+        if (imagePreview.src) {
+            URL.revokeObjectURL(imagePreview.src);
+            imagePreview.src = "";
+            if (resultImagePreview) resultImagePreview.src = "";
+        }
+        if (videoPreview.src) {
+            URL.revokeObjectURL(videoPreview.src);
+            videoPreview.src = "";
+            if (resultVideoPreview) resultVideoPreview.src = "";
+        }
+
+        currentFile = null;
+        fileInput.value = "";
+        uploadContent.style.display = "block";
+        previewContainer.style.display = "none";
+        
+        videoPreview.style.display = "none";
+        imagePreview.style.display = "none";
+
+        uploadZone.classList.remove("hidden");
+        loader.classList.add("hidden");
+        resultsZone.classList.add("hidden");
+        
+        uploadZone.style.borderStyle = "dashed";
+        uploadZone.style.padding = "3rem 2rem";
+        
+        // Reset tool cards
+        const toolsGrid = document.getElementById("tools-grid");
+        if (toolsGrid) toolsGrid.innerHTML = "";
+
+        // Reset explanation
+        const expBox = document.getElementById("explanation-box");
+        const expText = document.getElementById("explanation-text");
+        if (expBox) expBox.style.display = "none";
+        if (expText) expText.textContent = "";
+
+        // Reset verdict banner
+        const banner = document.getElementById("final-verdict-banner");
+        const bannerText = document.getElementById("final-verdict");
+        const scoreText = document.getElementById("final-score");
+        if (banner) banner.classList.remove("fake", "real");
+        if (bannerText) bannerText.textContent = "";
+        if (scoreText) scoreText.textContent = "";
+
+        // Reset active steps
+        const steps = document.querySelectorAll('.step');
+        steps.forEach(s => s.classList.remove('active'));
+        steps[0].classList.add('active');
+    }
+
+
+    restartBtn.addEventListener('click', resetUI);
+});

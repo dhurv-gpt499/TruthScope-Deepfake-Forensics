@@ -1,0 +1,13 @@
+mediapipe==0.10.11
+c2pa-python
+scipy
+numpy>=1.24.0
+opencv-python>=4.8.0
+streamlit
+gradio
+httpx
+pydantic
+python-dotenv
+Pillow
+fastapi>=0.100.0
+uvicorn>=0.23.0

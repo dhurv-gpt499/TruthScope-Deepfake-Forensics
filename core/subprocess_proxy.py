@@ -1,0 +1,125 @@
+import os
+import tempfile
+import pickle
+import subprocess
+import time
+import logging
+
+from core.base_tool import BaseForensicTool
+from core.data_types import ToolResult
+
+logger = logging.getLogger(__name__)
+
+class SubprocessToolProxy(BaseForensicTool):
+    """
+    Acts as a proxy for tools that must run in an isolated environment (e.g. .venv_gpu).
+    Serializes TrackedFace inputs, runs subprocess_worker.py, and deserializes ToolResult.
+    """
+    def __init__(self, tool_name: str, python_exec: str = None):
+        super().__init__()
+        self._tool_name = tool_name
+        self.requires_gpu = True
+        
+        # Find python exec
+        if python_exec is None:
+            venv_gpu = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.venv_gpu'))
+            if os.name == 'nt':
+                self.python_exec = os.path.join(venv_gpu, 'Scripts', 'python.exe')
+            else:
+                self.python_exec = os.path.join(venv_gpu, 'bin', 'python')
+        else:
+            self.python_exec = python_exec
+            
+        self.worker_script = os.path.abspath(os.path.join(os.path.dirname(__file__), 'subprocess_worker.py'))
+
+    @property
+    def tool_name(self) -> str:
+        return self._tool_name
+        
+    def setup(self):
+        # Delegate setup to worker during execute for isolation
+        pass
+
+    def _run_inference(self, input_data: dict) -> ToolResult:
+        start = time.perf_counter()
+        
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.pkl') as temp_in:
+            in_path = temp_in.name
+            
+        out_path = in_path + ".out"
+        
+        try:
+            with open(in_path, 'wb') as f:
+                # We expect input_data dictionary or similar to be completely picklable
+                pickle.dump(input_data, f)
+                
+            cmd = [self.python_exec, self.worker_script, self.tool_name, in_path]
+            
+            # Note: We capture stderr for debugging since stdout writes might be polluted by libs
+            result = subprocess.run(cmd, capture_output=True, text=True)
+            
+            if result.returncode != 0:
+                logger.error(f"{self.tool_name} subprocess worker failed. Stderr:\n{result.stderr}\nStdout:\n{result.stdout}")
+                return ToolResult(
+                    tool_name=self.tool_name,
+                    success=False,
+                    score=0.0,
+                    confidence=0.0,
+                    details={"stderr": result.stderr},
+                    error=True,
+                    error_msg=f"Subprocess worker failed with return code {result.returncode}",
+                    execution_time=time.perf_counter() - start,
+                    evidence_summary="Subprocess error"
+                )
+                
+            if not os.path.exists(out_path):
+                return ToolResult(
+                    tool_name=self.tool_name,
+                    success=False,
+                    score=0.0,
+                    confidence=0.0,
+                    details={"stdout": result.stdout, "stderr": result.stderr},
+                    error=True,
+                    error_msg="Subprocess did not generate an output configuration file",
+                    execution_time=time.perf_counter() - start,
+                    evidence_summary="Subprocess error"
+                )
+                
+            with open(out_path, 'rb') as f:
+                worker_result = pickle.load(f)
+                
+            if isinstance(worker_result, Exception):
+                logger.error(f"{self.tool_name} worker raised Exception: {worker_result}")
+                return ToolResult(
+                    tool_name=self.tool_name,
+                    success=False,
+                    score=0.0,
+                    confidence=0.0,
+                    details={},
+                    error=True,
+                    error_msg=str(worker_result),
+                    execution_time=time.perf_counter() - start,
+                    evidence_summary="Worker Exception"
+                )
+                
+            return worker_result
+            
+        except Exception as e:
+            logger.error(f"{self.tool_name} proxy execution failed: {e}", exc_info=True)
+            return ToolResult(
+                tool_name=self.tool_name,
+                success=False,
+                score=0.0,
+                confidence=0.0,
+                details={},
+                error=True,
+                error_msg=str(e),
+                execution_time=time.perf_counter() - start,
+                evidence_summary="Proxy Exception"
+            )
+            
+        finally:
+            if os.path.exists(in_path):
+                os.remove(in_path)
+            if os.path.exists(out_path):
+                os.remove(out_path)

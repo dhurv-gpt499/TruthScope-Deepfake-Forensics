@@ -1,0 +1,14 @@
+# /home/gaurav/Documents/Aegis-X/pyproject.toml
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aegis-x"
+version = "4.0.0"
+description = "Deepfake Detection Pipeline"
+requires-python = ">=3.10"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["core*", "utils*"]
