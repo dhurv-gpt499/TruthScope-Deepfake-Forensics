@@ -1,7 +1,7 @@
-# Aegis-X Dual-Pipeline Architecture Design
+# TruthScope Dual-Pipeline Architecture Design
 
 ## Overview
-Aegis-X leverages a dynamic dual-pipeline architecture (Face Pipeline vs. No-Face Pipeline) dynamically orchestrated by the `ForensicAgent`.
+TruthScope leverages a dynamic dual-pipeline architecture (Face Pipeline vs. No-Face Pipeline) dynamically orchestrated by the `ForensicAgent`.
 
 ## Pipeline Segment A: CPU Phase
 The CPU Phase executes immediately after preprocessing. It aims to rapidly identify clear signs of authenticity or structural synthetic instability using minimal resources.

@@ -1,5 +1,5 @@
 """
-Aegis-X Tool Diagnostics
+TruthScope Tool Diagnostics
 ========================
 Run this to verify ALL CPU and GPU tools are working correctly:
   - Weights are loading from .pth files (not random init)
@@ -17,7 +17,7 @@ Usage (Windows PowerShell):
 import os
 import sys
 import argparse
-from core.config import AegisConfig
+from core.config import TruthScopeConfig
 from utils.preprocessing import Preprocessor
 from core.tools.registry import get_registry
 
@@ -28,13 +28,13 @@ def test_all_tools(test_image: str):
         return
 
     print("=" * 55)
-    print("      AEGIS-X FULL TOOL DIAGNOSTICS")
+    print("      TRUTHSCOPE FULL TOOL DIAGNOSTICS")
     print("=" * 55)
     print(f"Image: {test_image}\n")
 
     # ── Preprocessing ──────────────────────────────────────
     print("[✔] Running Preprocessor...")
-    config = AegisConfig()
+    config = TruthScopeConfig()
     prep = Preprocessor(config)
     prep_result = prep.process_media(test_image)
 
@@ -103,7 +103,7 @@ def test_all_tools(test_image: str):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Aegis-X Tool Diagnostics")
+    parser = argparse.ArgumentParser(description="TruthScope Tool Diagnostics")
     parser.add_argument(
         "--image", "-i",
         default="downloads/web_uploads/fake_1007.jpg",

@@ -1,5 +1,5 @@
 """
-Aegis-X Ensemble Scorer (v4.0 - Production Final)
+TruthScope Ensemble Scorer (v4.0 - Production Final)
 ==================================================
 Aggregates ToolResults into single probability.
 

@@ -17,7 +17,7 @@ from transformers import CLIPVisionModelWithProjection, CLIPImageProcessor
 
 from core.base_tool import BaseForensicTool
 from core.data_types import ToolResult
-from core.config import AegisConfig
+from core.config import TruthScopeConfig
 from utils.vram_manager import VRAMLifecycleManager
 
 logger = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ class UnivFDTool(BaseForensicTool):
         self._tool_name = "run_univfd"
         self.requires_gpu = True
         
-        self.config = AegisConfig()
+        self.config = TruthScopeConfig()
         
         try:
             from utils.thresholds import UNIVFD_FAKE_THRESHOLD, UNIVFD_CONFIDENCE_MIN, UNIVFD_TTA_ENABLED
@@ -73,7 +73,7 @@ class UnivFDTool(BaseForensicTool):
 
     def _load_model(self) -> nn.Module:
         """Loads the CLIP backbone and the linear probe into RAM/VRAM."""
-        config = AegisConfig()
+        config = TruthScopeConfig()
         backbone_dir = getattr(config.models, 'univfd_backbone_dir', 'openai/clip-vit-large-patch14')
         probe_path = getattr(config.models, 'univfd_probe_path', 'models/univfd/probe.pth')
 

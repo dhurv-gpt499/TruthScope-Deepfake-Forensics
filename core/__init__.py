@@ -1,4 +1,4 @@
-"""Core module for Aegis-X."""
+"""Core module for TruthScope."""
 
 # Don't import early_stopping here - it causes circular imports
 # Import only the registry which has no dependencies on early_stopping

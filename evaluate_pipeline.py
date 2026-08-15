@@ -1,7 +1,7 @@
 import os
 import argparse
 from pathlib import Path
-from core.config import AegisConfig
+from core.config import TruthScopeConfig
 from utils.preprocessing import Preprocessor
 from core.agent import ForensicAgent
 
@@ -18,7 +18,7 @@ except ImportError:
     exit(1)
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Evaluate Aegis-X pipeline on a dataset.")
+    parser = argparse.ArgumentParser(description="Evaluate TruthScope pipeline on a dataset.")
     parser.add_argument("--dataset_root", type=str, required=True, help="Path to the dataset root directory.")
     parser.add_argument("--real_dir", type=str, default="real", help="Subdirectory name for real media.")
     parser.add_argument("--fake_dir", type=str, default="fake", help="Subdirectory name for fake media.")
@@ -50,7 +50,7 @@ def evaluate():
         
     print(f"Found {len([m for m in media_files if m[1] == 0])} real and {len([m for m in media_files if m[1] == 1])} fake files.")
     
-    config = AegisConfig()
+    config = TruthScopeConfig()
     preprocessor = Preprocessor(config)
     
     results = []

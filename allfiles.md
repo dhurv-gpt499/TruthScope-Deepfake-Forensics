@@ -1,4 +1,4 @@
-# Aegis-X — Complete Repository Documentation — v3.0
+# TruthScope — Complete Repository Documentation — v3.0
 
 > **Verified against live codebase — April 2026.**
 > Every class, method, threshold, and behaviour described below has been manually checked against the actual source files.
@@ -30,7 +30,7 @@
 ## Repository File Tree (Actual)
 
 ```
-aegis-x/
+truthscope/
 ├── run_web.py
 ├── setup.py
 ├── verify_tools.py
@@ -163,10 +163,10 @@ Defines custom exception classes for cross-process error propagation:
 
 | Exception | Inherits | Use |
 |---|---|---|
-| `AegisBaseError` | `Exception` | Root of all Aegis-X exceptions |
-| `ToolExecutionError` | `AegisBaseError` | Tool runtime failure |
-| `VRAMError` | `AegisBaseError` | GPU memory management failure |
-| `PreprocessingError` | `AegisBaseError` | Media processing failure |
+| `TruthScopeBaseError` | `Exception` | Root of all TruthScope exceptions |
+| `ToolExecutionError` | `TruthScopeBaseError` | Tool runtime failure |
+| `VRAMError` | `TruthScopeBaseError` | GPU memory management failure |
+| `PreprocessingError` | `TruthScopeBaseError` | Media processing failure |
 
 ---
 
@@ -183,7 +183,7 @@ All dataclasses. Reads from env vars via `os.getenv()` with defaults. Loaded onc
 | `PreprocessingConfig` | `face_crop_size=224`, `sbi_crop_size=380`, `max_video_frames=300`, `min_video_frames=90` | Preprocessing parameters |
 | `XceptionConfig` | `confidence_base=0.40`, `confidence_multiplier=1.6` | Xception-specific scoring |
 | `FreqNetFusionConfig` | `neural_weight=0.70`, `fad_weight=0.30` | FreqNet dual-stream fusion |
-| `AegisConfig` | All of the above as fields | Master config — instantiate once per request |
+| `TruthScopeConfig` | All of the above as fields | Master config — instantiate once per request |
 
 **What it cannot do:** `EnsembleWeights` field values are overridden by `registry.py` at runtime — changing `config.weights.univfd` does **not** change what the ensemble uses.
 

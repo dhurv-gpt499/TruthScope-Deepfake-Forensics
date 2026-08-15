@@ -1,5 +1,5 @@
 """
-Aegis-X SBI (Self-Blended Images) Forensic Tool
+TruthScope SBI (Self-Blended Images) Forensic Tool
 -----------------------------------------------
 Architecture:
     - Backbone: EfficientNet-B4 (Trainable Head: 1792 -> 1)
@@ -26,7 +26,7 @@ from pathlib import Path
 
 from core.base_tool import BaseForensicTool
 from core.data_types import ToolResult
-from core.config import AegisConfig
+from core.config import TruthScopeConfig
 from utils.vram_manager import VRAMLifecycleManager
 from utils.logger import setup_logger
 
@@ -92,7 +92,7 @@ class SBITool(BaseForensicTool):
             weight_path = str(LOCAL_WEIGHT_PATH)
             logger.info(f"Using local SBI weights: {weight_path}")
         else:
-            config = AegisConfig()
+            config = TruthScopeConfig()
             weight_path = getattr(config.models, 'sbi_weights', None)
             if weight_path:
                 logger.info(f"Using config SBI weights: {weight_path}")

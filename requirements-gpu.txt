@@ -11,3 +11,12 @@ pydantic
 python-dotenv
 timm>=0.9.0
 huggingface-hub>=0.20.0
+# Evaluation & Data tools
+datasets
+tqdm
+scikit-learn
+pandas
+seaborn
+matplotlib
+kagglehub
+sqlite-vec

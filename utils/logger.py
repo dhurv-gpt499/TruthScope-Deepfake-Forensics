@@ -1,4 +1,4 @@
-"""Standard logger for the Aegis-X system.
+"""Standard logger for the TruthScope system.
 
 This module provides a unified logging interface that logs
 messages both to stdout and to an output file.
@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 
 def setup_logger(name: str) -> logging.Logger:
-    """Sets up and returns a standard logger for Aegis-X.
+    """Sets up and returns a standard logger for TruthScope.
     
     Args:
         name: The name of the logger instance (e.g., __name__).
@@ -34,10 +34,10 @@ def setup_logger(name: str) -> logging.Logger:
     console_handler.setFormatter(formatter)
     logger.addHandler(console_handler)
     
-    # File handler writing to logs/aegis.log
+    # File handler writing to logs/truthscope.log
     log_dir = Path("logs")
     log_dir.mkdir(parents=True, exist_ok=True)
-    file_handler = logging.FileHandler(log_dir / "aegis.log")
+    file_handler = logging.FileHandler(log_dir / "truthscope.log")
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     

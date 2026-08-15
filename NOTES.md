@@ -1,4 +1,4 @@
-# Aegis-X — Complete Repository Documentation (allfiles.md)
+# TruthScope — Complete Repository Documentation (allfiles.md)
 
 > Generated automatically. Includes full README, every file, every class, every function —
 > what it does, what it **cannot** do, and how to counter its limitations.
@@ -7,9 +7,9 @@
 
 ## Part 1 — Original README
 
-# Aegis-X
+# TruthScope
 
-Aegis-X is a **Python** repository that contains the building blocks for a media/deepfake forensics pipeline, including:
+TruthScope is a **Python** repository that contains the building blocks for a media/deepfake forensics pipeline, including:
 - A tool interface (`BaseForensicTool`) and a tool registry (`ToolRegistry`)
 - Multiple forensic tools (C2PA, rPPG, DCT-based analysis, geometry, illumination, corneal/catchlight checks, SBI, FreqNet, SigLIP adapter)
 - An “agent” orchestration layer and early-stopping logic
@@ -52,10 +52,10 @@ pip install -r requirements.txt
 ### Environment variables
 An example environment file is provided at `.env.example`. Common variables include:
 
-- `AEGIS_MODEL_DIR` (default example: `models/`)
-- `AEGIS_DEVICE` (example: `auto`)
+- `TRUTHSCOPE_MODEL_DIR` (default example: `models/`)
+- `TRUTHSCOPE_DEVICE` (example: `auto`)
 - `OLLAMA_ENDPOINT` (example: `http://localhost:11434`)
-- `AEGIS_VRAM_THRESHOLD` (example: `3.5`)
+- `TRUTHSCOPE_VRAM_THRESHOLD` (example: `3.5`)
 
 Copy it to `.env` and adjust as needed:
 
@@ -214,12 +214,12 @@ Custom exception hierarchy for granular error handling.
 
 | Class | Inherits | Raised When |
 |-------|----------|-------------|
-| `AegisError` | `Exception` | Base: any Aegis-X internal error |
-| `ModelLoadError` | `AegisError` | AI model file missing or corrupted |
-| `PreprocessingError` | `AegisError` | MediaPipe/frame extraction fails |
-| `ToolExecutionError` | `AegisError` | Fatal error inside a tool's inference |
+| `TruthScopeError` | `Exception` | Base: any TruthScope internal error |
+| `ModelLoadError` | `TruthScopeError` | AI model file missing or corrupted |
+| `PreprocessingError` | `TruthScopeError` | MediaPipe/frame extraction fails |
+| `ToolExecutionError` | `TruthScopeError` | Fatal error inside a tool's inference |
 
-> **Limitation**: Does not include network errors (for Ollama/C2PA). Those fall back to `AegisError`.
+> **Limitation**: Does not include network errors (for Ollama/C2PA). Those fall back to `TruthScopeError`.
 > **Counter**: Wrap Ollama/C2PA calls in specific `try/except` with descriptive messages.
 
 ---
@@ -233,7 +233,7 @@ Master configuration system using typed Python dataclasses.
 - **`EnsembleWeights`** — Weights for each tool in the final scoring.
 - **`ThresholdConfig`** — REAL/FAKE verdict boundaries.
 - **`PreprocessingConfig`** — Face crop sizes, frame rates, max subjects.
-- **`AegisConfig`** — Master class that groups all the above.
+- **`TruthScopeConfig`** — Master class that groups all the above.
 
 > **Limitation**: No hot-reload. Config is read at startup. Changing `.env` requires restart.
 > **Counter**: Not yet countered. Plan: Add `watchdog` file watcher in future sprint.
@@ -258,7 +258,7 @@ Abstract base class that all forensic tools **must** extend.
 ---
 
 ### File: `core/agent.py`
-The main **orchestration brain** of Aegis-X. Coordinates CPU → GPU → Ensemble → LLM.
+The main **orchestration brain** of TruthScope. Coordinates CPU → GPU → Ensemble → LLM.
 
 #### `class AgentEvent`
 Lightweight progress event for real-time UI streaming via Python generators.
@@ -988,7 +988,7 @@ Manages the reference statistics (mean ± std of band ratios for real images) us
 
 ### File: `pyproject.toml`
 Project metadata for `pip install -e .`:
-- **Name**: `aegis-x`
+- **Name**: `truthscope`
 - **Version**: `4.0.0`
 - **Python requirement**: `>= 3.10`
 - **Packages**: Includes `core*` and `utils*` only (downloads/test_data excluded from install)
@@ -1021,10 +1021,10 @@ Template for environment variables. Users copy to `.env` and fill in:
 
 | Variable | Example | Purpose |
 |----------|---------|---------|
-| `AEGIS_MODEL_DIR` | `models/` | Root directory for all model weight files |
-| `AEGIS_DEVICE` | `auto` | `cuda`, `cpu`, or `auto` |
+| `TRUTHSCOPE_MODEL_DIR` | `models/` | Root directory for all model weight files |
+| `TRUTHSCOPE_DEVICE` | `auto` | `cuda`, `cpu`, or `auto` |
 | `OLLAMA_ENDPOINT` | `http://localhost:11434` | Ollama LLM server URL |
-| `AEGIS_VRAM_THRESHOLD` | `3.5` | Min free VRAM (GB) required to run GPU tools |
+| `TRUTHSCOPE_VRAM_THRESHOLD` | `3.5` | Min free VRAM (GB) required to run GPU tools |
 
 ### File: `.gitignore`
 Standard Python + ML gitignore. Excludes: `models/`, `__pycache__/`, `*.pth`, `*.pt`, `.env`, `test_data/*.db`, virtual envs.
@@ -1053,7 +1053,7 @@ Root package marker. Makes the repo importable as a Python package.
 
 # 📸 SECTION 1: Photo Deepfake Detection — Full Step-by-Step Process
 
-This section walks through **exactly** what happens when a static image is submitted to Aegis-X for deepfake analysis. Each step is described in the order it executes, with the tools that activate, what evidence they collect, what they miss, edge cases we have handled, and edge cases still open.
+This section walks through **exactly** what happens when a static image is submitted to TruthScope for deepfake analysis. Each step is described in the order it executes, with the tools that activate, what evidence they collect, what they miss, edge cases we have handled, and edge cases still open.
 
 ---
 

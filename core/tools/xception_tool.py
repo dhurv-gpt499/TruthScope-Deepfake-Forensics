@@ -18,7 +18,7 @@ import timm
 
 from core.base_tool import BaseForensicTool
 from core.data_types import ToolResult
-from core.config import AegisConfig
+from core.config import TruthScopeConfig
 from utils.vram_manager import VRAMLifecycleManager
 
 logger = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ class XceptionTool(BaseForensicTool):
         self.requires_gpu = True
         
         # Load from config
-        self.config = AegisConfig()
+        self.config = TruthScopeConfig()
         try:
             from utils.thresholds import XCEPTION_FAKE_THRESHOLD
             self.fake_threshold = XCEPTION_FAKE_THRESHOLD

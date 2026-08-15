@@ -16,7 +16,7 @@ def run_cmd(cmd, desc):
 
 def setup_environment():
     print("="*60)
-    print("          AEGIS-X V2 INSTALLATION SCRIPT")
+    print("          TRUTHSCOPE V2 INSTALLATION SCRIPT")
     print("="*60)
 
     # 1. Setup Virtual Environments
@@ -68,7 +68,7 @@ def setup_environment():
     download_dir.mkdir(parents=True, exist_ok=True)
 
     # Download from user's Kaggle dataset
-    dataset_url = "gauravkumarjangid/aegis-pth"
+    dataset_url = "gauravkumarjangid/truthscope-pth"
     run_cmd(
         f"{python_cmd_main} -m kaggle datasets download -d {dataset_url} -p {download_dir} --unzip",
         f"Downloading and unzipping models from {dataset_url}"
@@ -98,7 +98,7 @@ def setup_environment():
     shutil.rmtree(download_dir, ignore_errors=True)
 
     print("\n" + "="*60)
-    print(" INSTALLATION COMPLETE! YOU ARE READY TO DEPLOY AEGIS-X.")
+    print(" INSTALLATION COMPLETE! YOU ARE READY TO DEPLOY TRUTHSCOPE.")
     activate_cmd = ".venv_main\\Scripts\\activate" if os.name == 'nt' else "source .venv_main/bin/activate"
     print(f" Use: '{activate_cmd}' followed by 'python run_web.py' to start the server.")
     print("="*60)

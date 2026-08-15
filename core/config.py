@@ -1,7 +1,7 @@
 """Configuration module housing all application configuration state.
 
 This module defines standard typed configuration classes that serve
-as the single source of truth for configuration across Aegis-X.
+as the single source of truth for configuration across TruthScope.
 """
 
 import os
@@ -27,13 +27,13 @@ load_dotenv()
 class ModelPaths:
     """Paths to models and weights used by the system."""
     # Constructed using pathlib but cast to str to match specifications
-    phi3_model: str = str(Path(os.getenv("AEGIS_MODEL_DIR", "models/")) / "phi3")
-    univfd_backbone_dir: str = str(Path(os.getenv("AEGIS_MODEL_DIR", "models/")) / "clip-vit-large-patch14")
-    univfd_probe_path: str = str(Path(os.getenv("AEGIS_MODEL_DIR", "models/")) / "univfd" / "probe.pth")
-    xception_weights: str = str(Path(os.getenv("AEGIS_MODEL_DIR", "models/")) / "xception" / "xception_deepfake.pth")
-    sbi_weights: str = str(Path(os.getenv("AEGIS_MODEL_DIR", "models/")) / "sbi" / "efficientnet_b4.pth")
-    freqnet_weights: str = str(Path(os.getenv("AEGIS_MODEL_DIR", "models/")) / "freqnet" / "cnndetect_resnet50.pth")
-    clip_adapter_weights: str = str(Path(os.getenv("AEGIS_MODEL_DIR", "models/")) / "clip_adapter.pt")
+    phi3_model: str = str(Path(os.getenv("TRUTHSCOPE_MODEL_DIR", "models/")) / "phi3")
+    univfd_backbone_dir: str = str(Path(os.getenv("TRUTHSCOPE_MODEL_DIR", "models/")) / "clip-vit-large-patch14")
+    univfd_probe_path: str = str(Path(os.getenv("TRUTHSCOPE_MODEL_DIR", "models/")) / "univfd" / "probe.pth")
+    xception_weights: str = str(Path(os.getenv("TRUTHSCOPE_MODEL_DIR", "models/")) / "xception" / "xception_deepfake.pth")
+    sbi_weights: str = str(Path(os.getenv("TRUTHSCOPE_MODEL_DIR", "models/")) / "sbi" / "efficientnet_b4.pth")
+    freqnet_weights: str = str(Path(os.getenv("TRUTHSCOPE_MODEL_DIR", "models/")) / "freqnet" / "cnndetect_resnet50.pth")
+    clip_adapter_weights: str = str(Path(os.getenv("TRUTHSCOPE_MODEL_DIR", "models/")) / "clip_adapter.pt")
 
 @dataclass
 class AgentConfig:
@@ -105,7 +105,7 @@ class FreqNetFusionConfig:
     fad_weight: float = FREQNET_FAD_WEIGHT
 
 @dataclass
-class AegisConfig:
+class TruthScopeConfig:
     """Master configuration class grouping all subsystem configs."""
     models: ModelPaths = field(default_factory=ModelPaths)
     agent: AgentConfig = field(default_factory=AgentConfig)

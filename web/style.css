@@ -1,5 +1,5 @@
 /* ========================================
-   AEGIS-X REDESIGN
+   TRUTHSCOPE REDESIGN
    Japanese Minimalism × Forensic Precision
    Senior Designer Crafted
    ======================================== */
@@ -183,13 +183,13 @@ header {
 }
 
 .logo-icon {
-    font-size: 2.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 64px;
     height: 64px;
     background: linear-gradient(135deg, var(--accent-indigo), var(--accent-sage));
+    color: white;
     border-radius: 20px;
     box-shadow: var(--shadow-md);
     position: relative;
@@ -205,9 +205,9 @@ header {
 }
 
 .logo h1 {
-    font-size: 3.25rem;
+    font-size: 3.5rem;
     font-weight: 700;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.04em;
     background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

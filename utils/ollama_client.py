@@ -1,5 +1,5 @@
 """
-Aegis-X Ollama Client (Day 18 - FINAL v7)
+TruthScope Ollama Client (Day 18 - FINAL v7)
 =========================================
 Asynchronous Python controller for local LLM generations via Ollama.
 

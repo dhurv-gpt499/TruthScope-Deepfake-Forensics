@@ -1,4 +1,4 @@
-"""Core data types for the Aegis-X system.
+"""Core data types for the TruthScope system.
 
 This module contains the unified interface and payload contracts for all internal
 forensic tools and orchestration components.
@@ -9,7 +9,7 @@ from typing import Dict, Any, Optional
 
 @dataclass(init=False)
 class ToolResult:
-    """Standardized output payload from any forensic tool in Aegis-X."""
+    """Standardized output payload from any forensic tool in TruthScope."""
     
     tool_name: str
     success: bool

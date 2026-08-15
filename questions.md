@@ -1,4 +1,4 @@
-# 🛡️ Aegis-X Interview Questions Guide
+# 🛡️ TruthScope Interview Questions Guide
 
 ## Advanced Deepfake Forensic Detection Pipeline - Comprehensive Interview Preparation
 ### **Version 4.0: Three-Pronged Anomaly Shield — Decider/Supporter Hierarchy · GPU Conflict Guard · No-Face Pipeline**
@@ -941,7 +941,7 @@ Load Balancer
 
 ---
 
-### Q32: How would you design a cloud-native version of Aegis-X?
+### Q32: How would you design a cloud-native version of TruthScope?
 
 **What the interviewer is testing:** Cloud architecture, containerization, microservices.
 
@@ -964,14 +964,14 @@ Services:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: aegis-gpu-worker
+  name: truthscope-gpu-worker
 spec:
   replicas: 10
   template:
     spec:
       containers:
       - name: worker
-        image: aegis-x:latest
+        image: truthscope:latest
         resources:
           limits:
             nvidia.com/gpu: 1
@@ -1253,7 +1253,7 @@ if user_queries_diverse_images_sequentially():
 
 **Scenario:**
 ```
-Original image → Aegis-X → Saves result image → Submits result image again
+Original image → TruthScope → Saves result image → Submits result image again
 ```
 
 **Potential issues:**
@@ -1264,10 +1264,10 @@ Original image → Aegis-X → Saves result image → Submits result image again
 **Handling:**
 ```python
 # Detect previous analysis metadata
-if "aegis_x_analyzed" in image.metadata:
-    logger.warning("Image previously analyzed by Aegis-X")
+if "truthscope_analyzed" in image.metadata:
+    logger.warning("Image previously analyzed by TruthScope")
     # Still analyze but note in report
-    report.notes.append("This image contains metadata indicating prior Aegis-X analysis")
+    report.notes.append("This image contains metadata indicating prior TruthScope analysis")
 
 # Handle compression artifacts
 if dct_tool.detects_double_compression():
@@ -1466,7 +1466,7 @@ else:
 ```bash
 # Instant rollback via symlink switch
 ln -sfn v1.0_probe.pth models/univfd/current.pth
-systemctl reload aegis-x
+systemctl reload truthscope
 ```
 
 **5. Shadow mode:**
@@ -1684,12 +1684,12 @@ EARLY_STOP_CONFIDENCE = 0.85
 from pydantic import BaseSettings
 
 class Config(BaseSettings):
-    model_dir: str = os.getenv("AEGIS_MODEL_DIR", "models/")
-    device: str = os.getenv("AEGIS_DEVICE", "auto")
+    model_dir: str = os.getenv("TRUTHSCOPE_MODEL_DIR", "models/")
+    device: str = os.getenv("TRUTHSCOPE_DEVICE", "auto")
     ollama_endpoint: str = os.getenv("OLLAMA_ENDPOINT", "http://localhost:11434")
 
     class Config:
-        env_prefix = "AEGIS_"
+        env_prefix = "TRUTHSCOPE_"
 ```
 
 **Future improvement:** YAML config files for per-deployment customization
@@ -1858,7 +1858,7 @@ class Config(BaseSettings):
 **Sample answer structure (STAR method):**
 
 **Situation:**
-"Building Aegis-X, I faced a critical VRAM exhaustion issue. Running 4 GPU models sequentially still caused OOM crashes on 4GB cards because PyTorch's caching allocator wasn't releasing memory between loads."
+"Building TruthScope, I faced a critical VRAM exhaustion issue. Running 4 GPU models sequentially still caused OOM crashes on 4GB cards because PyTorch's caching allocator wasn't releasing memory between loads."
 
 **Task:**
 "Needed to guarantee successful inference on minimum-spec hardware (RTX 3050 4GB) without requiring users to upgrade."
@@ -2686,7 +2686,7 @@ return {
 **What consumers can do with this:**
 - UI: Show "⚠️ DEGRADED ANALYSIS" banner
 - API clients: Refuse to use result, request retry
-- Monitoring: Increment `aegis.degraded_verdicts` metric counter
+- Monitoring: Increment `truthscope.degraded_verdicts` metric counter
 - Logging: Include in structured audit log for case review
 
 ---
@@ -2766,10 +2766,10 @@ core/tools/rppg_tool.py
 
 ### Scenario: Senior ML Engineer Interview at Meta Reality Labs
 
-**Interviewer**: "Thanks for joining us today. I see you built Aegis-X, a deepfake detection system. Let's dive in. Can you whiteboard the high-level architecture for me?"
+**Interviewer**: "Thanks for joining us today. I see you built TruthScope, a deepfake detection system. Let's dive in. Can you whiteboard the high-level architecture for me?"
 
 **You** (ideal response):
-> "Absolutely. Aegis-X is a dual-pipeline ensemble system with 10 orthogonal forensic tools. Let me draw this out...
+> "Absolutely. TruthScope is a dual-pipeline ensemble system with 10 orthogonal forensic tools. Let me draw this out...
 >
 > *[Draws on whiteboard]*
 >
@@ -2884,10 +2884,10 @@ Good luck! 🚀
 
 ### Scenario: Senior ML Engineer Interview at Meta Reality Labs
 
-**Interviewer**: "Thanks for joining us today. I see you built Aegis-X, a deepfake detection system. Let's dive in. Can you whiteboard the high-level architecture for me?"
+**Interviewer**: "Thanks for joining us today. I see you built TruthScope, a deepfake detection system. Let's dive in. Can you whiteboard the high-level architecture for me?"
 
 **You** (ideal response):
-> "Absolutely. Aegis-X is a dual-pipeline ensemble system with 10 orthogonal forensic tools. Let me draw this out...
+> "Absolutely. TruthScope is a dual-pipeline ensemble system with 10 orthogonal forensic tools. Let me draw this out...
 >
 > *[Draws on whiteboard]*
 >
@@ -2985,7 +2985,7 @@ Good luck! 🚀
 >
 > 3. **Edge Deployment**: Optimize for on-device inference (NVIDIA Jetson, Apple Neural Engine). Use knowledge distillation to compress UnivFD from 400MB to 50MB, and quantize to INT8 for 4x speedup. Target: 100ms per frame on mobile.
 >
-> Long-term vision: Make Aegis-X the 'TLS for media'—every image/video has a cryptographic attestation trail, verified client-side before rendering."
+> Long-term vision: Make TruthScope the 'TLS for media'—every image/video has a cryptographic attestation trail, verified client-side before rendering."
 
 **Interviewer**: "Thanks! Any questions for me?"
 
@@ -3030,7 +3030,7 @@ Good luck! 🚀
 
 ---
 
-### Problem 2: Scale Aegis-X to 1 Million Images/Day
+### Problem 2: Scale TruthScope to 1 Million Images/Day
 
 **Current State**: Single server, 4 sec/image, 99% uptime
 **Goal**: 1M images/day, p95 latency <5 sec, 99.9% uptime, <$500/day infra cost

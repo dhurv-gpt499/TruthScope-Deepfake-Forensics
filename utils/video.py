@@ -1,4 +1,4 @@
-"""Video I/O utilities for Aegis-X.
+"""Video I/O utilities for TruthScope.
 
 Provides robust, memory-safe functions for extracting video frames using hardware
 acceleration (NVDEC via torchcodec) when available, falling back to OpenCV.

@@ -19,7 +19,7 @@ logs/
 
 # Testing artifacts
 tests_files/
-aegis_x.egg-info/
+truthscope.egg-info/
 
 # User uploads and temporary files
 downloads/

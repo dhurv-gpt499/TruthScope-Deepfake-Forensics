@@ -328,7 +328,7 @@ class RPPGTool(BaseForensicTool):
         sample_indices = np.linspace(0, len(frames) - 1, min(5, len(frames)), dtype=int)
         detections_count = 0
         
-        # frames are assumed to be RGB based on Aegis-X preprocessing
+        # frames are assumed to be RGB based on TruthScope preprocessing
         with mp_face_detection.FaceDetection(model_selection=0, min_detection_confidence=0.6) as face_detection:
             for idx in sample_indices:
                 frame = frames[idx]

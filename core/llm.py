@@ -4,7 +4,7 @@ import queue
 from typing import Dict, Any, Generator
 
 from core.data_types import ToolResult
-from core.config import AegisConfig
+from core.config import TruthScopeConfig
 from utils.ollama_client import OllamaClient
 from core.forensic_summary import build_phi3_prompt
 
@@ -14,7 +14,7 @@ async def stream_completion(prompt: str, temperature: float = 0.1, max_tokens: i
     Asynchronous generator for streaming LLM completion via OllamaClient.
     Used by forensic_summary.py's legacy generate_verdict function.
     """
-    agent_config = AegisConfig().agent
+    agent_config = TruthScopeConfig().agent
     client = OllamaClient(agent_config)
     q = asyncio.Queue()
     
@@ -58,7 +58,7 @@ def generate_verdict(
     Bridges asynchronous OllamaClient with the synchronous ForensicAgent.
     """
     prompt = build_phi3_prompt(ensemble_score, tool_results, verdict)
-    agent_config = AegisConfig().agent
+    agent_config = TruthScopeConfig().agent
     q = queue.Queue()
     
     def async_runner():

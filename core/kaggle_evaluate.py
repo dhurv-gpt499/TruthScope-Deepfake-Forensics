@@ -14,12 +14,12 @@ from sklearn.metrics import (
 )
 import kagglehub
 
-from core.config import AegisConfig
+from core.config import TruthScopeConfig
 from utils.preprocessing import Preprocessor
 from core.agent import ForensicAgent
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Evaluate Aegis-X on a Kaggle dataset.")
+    parser = argparse.ArgumentParser(description="Evaluate TruthScope on a Kaggle dataset.")
     parser.add_argument("--dataset", type=str, default="manjilkarki/deepfake-and-real-images", help="Kaggle dataset handle.")
     parser.add_argument("--output_dir", type=str, default="evaluation_results", help="Directory to save results.")
     parser.add_argument("--max_samples", type=int, default=None, help="Limit samples to process per class.")
@@ -103,7 +103,7 @@ def evaluate(dataset_root, real_dirs, fake_dirs, output_path, max_samples=None):
         
     print(f"\n[📊] Starting evaluation on {len(all_files)} files...")
     
-    config = AegisConfig()
+    config = TruthScopeConfig()
     preprocessor = Preprocessor(config)
     
     results = []
@@ -166,7 +166,7 @@ def evaluate(dataset_root, real_dirs, fake_dirs, output_path, max_samples=None):
     
     # --- DESIGNED OUTPUT ---
     print("\n" + "="*50)
-    print("         AEGIS-X EVALUATION REPORT")
+    print("         TRUTHSCOPE EVALUATION REPORT")
     print("="*50)
     print(f"  Dataset:         manjilkarki/deepfake-and-real-images")
     print(f"  Total Processed: {len(y_true)}")
@@ -188,13 +188,13 @@ def evaluate(dataset_root, real_dirs, fake_dirs, output_path, max_samples=None):
     # --- ROC CURVE ---
     fpr_arr, tpr_arr, _ = roc_curve(y_true, y_scores)
     plt.figure(figsize=(10, 7), facecolor='#f8f9fa')
-    plt.plot(fpr_arr, tpr_arr, color='#2563eb', lw=3, label=f'Aegis-X (AUC = {auc:.3f})')
+    plt.plot(fpr_arr, tpr_arr, color='#2563eb', lw=3, label=f'TruthScope (AUC = {auc:.3f})')
     plt.plot([0, 1], [0, 1], color='#94a3b8', lw=2, linestyle='--')
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
     plt.xlabel('False Positive Rate', fontsize=12, fontweight='bold')
     plt.ylabel('True Positive Rate (Recall)', fontsize=12, fontweight='bold')
-    plt.title('Receiver Operating Characteristic (ROC) - Aegis-X Forensic Evaluation', fontsize=14, fontweight='bold', pad=20)
+    plt.title('Receiver Operating Characteristic (ROC) - TruthScope Forensic Evaluation', fontsize=14, fontweight='bold', pad=20)
     plt.legend(loc="lower right", frameon=True, fontsize=10)
     plt.grid(True, linestyle=':', alpha=0.6)
     

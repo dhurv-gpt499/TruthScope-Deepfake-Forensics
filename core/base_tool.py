@@ -1,4 +1,4 @@
-"""Abstract base class for all Aegis-X forensic tools.
+"""Abstract base class for all TruthScope forensic tools.
 
 This module defines the structural requirements and execution wrapper required
 to ensure smooth integration into the application's overall orchestration engine.
@@ -43,7 +43,7 @@ class BaseForensicTool(ABC):
         """Execution wrapper that safely triggers inference and captures metrics.
         
         This method acts as a mandatory firewall, guaranteeing that individual
-        tool crashes do not crash the overarching Aegis-X application.
+        tool crashes do not crash the overarching TruthScope application.
         
         Args:
             input_data: The media data to be processed.

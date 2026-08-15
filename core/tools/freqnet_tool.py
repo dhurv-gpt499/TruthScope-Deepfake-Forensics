@@ -1,5 +1,5 @@
 """
-Aegis-X FreqNet Forensic Tool (v2)
+TruthScope FreqNet Forensic Tool (v2)
 ----------------------------------
 Replaces FreqNetDual with a fast ResNet-50 CNNDetect architecture + 
 FADHook spectral analysis fusion stream.
@@ -19,7 +19,7 @@ from PIL import Image
 
 from core.base_tool import BaseForensicTool
 from core.data_types import ToolResult
-from core.config import AegisConfig
+from core.config import TruthScopeConfig
 from utils.vram_manager import VRAMLifecycleManager
 
 # Intact components from v1 FreqNet package
@@ -52,7 +52,7 @@ class FreqNetTool(BaseForensicTool):
         self.device = None
         self.requires_gpu = True
         
-        self.config = AegisConfig()
+        self.config = TruthScopeConfig()
         self.fusion_cfg = self.config.freqnet_fusion
         
         self.calibration_manager = CalibrationManager()

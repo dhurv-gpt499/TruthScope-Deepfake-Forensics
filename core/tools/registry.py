@@ -1,7 +1,7 @@
 """
 Tool Registry: single source of truth for tool metadata and execution.
 
-Every tool in the Aegis-X pipeline is registered here with its weight,
+Every tool in the TruthScope pipeline is registered here with its weight,
 category, trust tier, AND runtime instance. This prevents magic strings
 and ensures weight calculations are consistent across the system.
 """

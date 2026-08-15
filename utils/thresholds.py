@@ -1,7 +1,7 @@
 """
-Aegis-X Thresholds Configuration (v6.0 - Final Unified)
+TruthScope Thresholds Configuration (v6.0 - Final Unified)
 ========================================================
-Single source of truth for all numeric thresholds used across Aegis-X.
+Single source of truth for all numeric thresholds used across TruthScope.
 
 All tools import from this file. No hardcoded values elsewhere.
 """

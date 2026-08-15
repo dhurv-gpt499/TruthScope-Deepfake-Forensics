@@ -12,14 +12,14 @@ from fastapi import FastAPI, UploadFile, File, Request
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-from core.config import AegisConfig
+from core.config import TruthScopeConfig
 from utils.preprocessing import Preprocessor
 from core.tools.registry import get_registry
 
-app = FastAPI(title="Aegis-X Web Interface")
+app = FastAPI(title="TruthScope Web Interface")
 
 # Initialize config and registry once
-config = AegisConfig()
+config = TruthScopeConfig()
 preprocessor = Preprocessor(config)
 registry = get_registry()
 cpu_tools = ["check_c2pa", "run_dct", "run_geometry", "run_illumination"]

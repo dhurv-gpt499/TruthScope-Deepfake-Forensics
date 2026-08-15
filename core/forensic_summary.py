@@ -33,7 +33,7 @@ def build_phi3_prompt(
     prompt_parts.append("")
     
     # ── HEADER ──
-    prompt_parts.append("=== AEGIS-X FORENSIC ANALYSIS ===\n")
+    prompt_parts.append("=== TRUTHSCOPE FORENSIC ANALYSIS ===\n")
     prompt_parts.append(f"Overall Authenticity Score: {ensemble_score:.1%}")
     prompt_parts.append(f"Verdict: {verdict}\n")
     

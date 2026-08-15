@@ -1,7 +1,7 @@
 """Face preprocessing and patching leveraging MediaPipe Face Mesh.
 
 Extracts standardized face crops and precise anatomical patches according
-to Aegis-X Phase 1 specifications. Support tracking via CPU-SORT.
+to TruthScope Phase 1 specifications. Support tracking via CPU-SORT.
 """
 import cv2
 import numpy as np

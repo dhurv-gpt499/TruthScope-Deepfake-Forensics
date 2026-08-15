@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/Version-4.0_(Anomaly--Shield)-8B5CF6?style=for-the-badge" />
 </p>
 
-<h1 align="center">🛡️ Aegis-X</h1>
+<h1 align="center">🛡️ TruthScope</h1>
 <h3 align="center">Advanced Deepfake Forensic Detection — Dual-Pipeline with Anomaly Shield</h3>
 
 <p align="center">
@@ -60,8 +60,8 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/gaurav337/aegis-test.git
-cd aegis-test
+git clone https://github.com/gaurav337/truthscope-test.git
+cd truthscope-test
 
 # Run the one-click installer
 # (Creates venvs, installs dependencies, downloads weights from Kaggle)
@@ -84,7 +84,7 @@ python3.10 -m venv .venv_gpu
 # (Windows: Use .\.venv_main\Scripts\pip and .\.venv_gpu\Scripts\pip instead)
 
 # 3. Download model weights from Kaggle
-# https://www.kaggle.com/datasets/gauravkumarjangid/aegis-pth
+# https://www.kaggle.com/datasets/gauravkumarjangid/truthscope-pth
 # Place them as:
 #   models/univfd/probe.pth
 #   models/xception/xception_deepfake.pth
@@ -654,11 +654,11 @@ cp .env.example .env
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `AEGIS_MODEL_DIR` | `models/` | Root directory for all model weight files |
-| `AEGIS_DEVICE` | `auto` | Force `cuda`, `cpu`, or `auto` detect |
+| `TRUTHSCOPE_MODEL_DIR` | `models/` | Root directory for all model weight files |
+| `TRUTHSCOPE_DEVICE` | `auto` | Force `cuda`, `cpu`, or `auto` detect |
 | `OLLAMA_ENDPOINT` | `http://localhost:11434` | Ollama LLM server URL |
 | `OLLAMA_MODEL` | `phi3:mini` | LLM model for verdict synthesis |
-| `AEGIS_VRAM_THRESHOLD` | `3.5` | Minimum free VRAM (GB) to attempt GPU tools |
+| `TRUTHSCOPE_VRAM_THRESHOLD` | `3.5` | Minimum free VRAM (GB) to attempt GPU tools |
 | `LLM_TEMPERATURE` | `0.1` | Low temperature for deterministic forensic output |
 | `LLM_MAX_TOKENS` | `1024` | Maximum tokens for LLM response |
 
@@ -684,7 +684,7 @@ cp .env.example .env
 ## 📁 Project Structure
 
 ```
-aegis-x/
+truthscope/
 ├── run_web.py                  # Entry point — FastAPI + SSE streaming server
 ├── setup.py                    # One-click installer (venvs + Kaggle weights)
 ├── verify_tools.py             # Diagnostic: test all tools individually
@@ -786,7 +786,7 @@ PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True \
 
 ## 🔑 Model Weights
 
-**Dataset:** [kaggle.com/datasets/gauravkumarjangid/aegis-pth](https://www.kaggle.com/datasets/gauravkumarjangid/aegis-pth)
+**Dataset:** [kaggle.com/datasets/gauravkumarjangid/truthscope-pth](https://www.kaggle.com/datasets/gauravkumarjangid/truthscope-pth)
 
 | Weight File | Size | Model | Source Paper |
 |---|---|---|---|

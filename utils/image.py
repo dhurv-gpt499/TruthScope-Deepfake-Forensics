@@ -1,4 +1,4 @@
-"""Image I/O utilities for Aegis-X.
+"""Image I/O utilities for TruthScope.
 
 Provides safe, type-hinted functions for loading and validating image files,
 ensuring they are properly converted to RGB format for downstream inference.

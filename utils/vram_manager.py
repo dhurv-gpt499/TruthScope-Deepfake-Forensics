@@ -2,7 +2,7 @@
 
 Provides deterministic memory lifecycle management for hardware-accelerated tools.
 Enforces absolute device purging via class-level locking and strict garbage collection
-to stay within Aegis-X's 4GB VRAM ceiling (reserving ~3GB for models, ~1GB for context).
+to stay within TruthScope's 4GB VRAM ceiling (reserving ~3GB for models, ~1GB for context).
 
 ⚙️ HARDWARE THRESHOLDS — Synchronized with utils/video.py:
     Supports: TPU (Colab) → CUDA → MPS → CPU (priority order)
