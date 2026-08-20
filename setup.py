@@ -68,7 +68,7 @@ def setup_environment():
     download_dir.mkdir(parents=True, exist_ok=True)
 
     # Download from user's Kaggle dataset
-    dataset_url = "gauravkumarjangid/truthscope-pth"
+    dataset_url = "gauravkumarjangid/aegis-pth"
     run_cmd(
         f"{python_cmd_main} -m kaggle datasets download -d {dataset_url} -p {download_dir} --unzip",
         f"Downloading and unzipping models from {dataset_url}"

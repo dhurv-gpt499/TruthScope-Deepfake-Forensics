@@ -1,4 +1,5 @@
 mediapipe==0.10.11
+protobuf<4
 c2pa-python
 scipy
 numpy>=1.24.0
@@ -9,6 +10,7 @@ python-dotenv
 Pillow
 fastapi>=0.100.0
 uvicorn>=0.23.0
+python-multipart
 # Evaluation & Data tools
 datasets
 tqdm

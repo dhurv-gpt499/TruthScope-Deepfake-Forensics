@@ -239,6 +239,7 @@ class ForensicAgent:
                 yield AgentEvent("tool_complete", tool_name, data={
                     "success": result.success, "score": result.fake_score,
                     "confidence": result.confidence, "error_msg": result.error_msg,
+                    "evidence_summary": result.evidence_summary,
                 })
 
         # Check DEGRADED status
